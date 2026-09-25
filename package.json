@@ -1,0 +1,9 @@
+{
+  "name": "registro-3x0-ka",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Formulario de registro del beneficio 3x0 en primera compra para Key Accounts de Addi, desplegado en Vercel con respuestas guardadas en Google Sheets.",
+  "dependencies": {
+    "googleapis": "^126.0.1"
+  }
+}

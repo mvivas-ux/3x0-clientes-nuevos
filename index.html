@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Registro 3x0 KA</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBFAFC; --surface:#FFFFFF; --surface-alt:#F4EEFC; --border:#E3DBF3;
+    --text:#241E2E; --text-muted:#6B6478; --accent:#6C2EB5; --accent-hover:#5A2596;
+    --accent-soft:#EFE4FB; --success:#1E8E5A; --success-soft:#E4F7EE;
+    --danger:#C13B3B; --danger-soft:#FBEAEA; --focus:#B98CF2;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17131F; --surface:#211B2C; --surface-alt:#2A2338; --border:#3B324B;
+      --text:#EEE8F7; --text-muted:#A79DBB; --accent:#B98CF2; --accent-hover:#C9A5F5;
+      --accent-soft:#362A4A; --success:#4ADE80; --success-soft:#1E3B2C;
+      --danger:#F87171; --danger-soft:#402024; --focus:#B98CF2;
+      color-scheme: dark;
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;
+    padding-inline:20px; padding-block:0 40px;
+  }
+  .wrap{max-width:720px; margin:0 auto;}
+  header.top{padding-block:28px 20px; display:flex; flex-direction:column; gap:6px;}
+  .eyebrow{font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent);}
+  h1{font-family:"Sora",sans-serif; font-size:clamp(24px,4vw,32px); margin:0; text-wrap:balance;}
+  .sub{color:var(--text-muted); font-size:15px; line-height:1.5; max-width:60ch;}
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px; margin-block-end:16px;}
+  .card h2{font-family:"Sora",sans-serif; font-size:18px; margin:0 0 4px; display:flex; align-items:center; gap:10px;}
+  .step-num{display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; background:var(--accent-soft); color:var(--accent); font-size:13px; font-weight:700; flex-shrink:0;}
+  .card .hint{color:var(--text-muted); font-size:13px; margin:0 0 16px; line-height:1.5;}
+  .field{margin-block-end:16px;}
+  .field:last-child{margin-block-end:0;}
+  label{display:block; font-size:13px; font-weight:600; margin-bottom:6px;}
+  label .opt{color:var(--text-muted); font-weight:400;}
+  input[type=text], input[type=email], input[type=number], input[type=tel], textarea{
+    width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border);
+    background:var(--bg); color:var(--text); font-size:14px; font-family:inherit;
+  }
+  input:focus, textarea:focus{outline:2px solid var(--focus); outline-offset:1px;}
+  textarea{resize:vertical; min-height:70px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media (max-width:520px){.grid2{grid-template-columns:1fr;}}
+  .choice-row{display:flex; flex-wrap:wrap; gap:10px;}
+  .choice{display:flex; align-items:center; gap:8px; border:1px solid var(--border); border-radius:10px; padding:10px 14px; cursor:pointer; font-size:14px; background:var(--bg); transition:border-color .15s, background .15s;}
+  .choice:has(input:checked){border-color:var(--accent); background:var(--accent-soft);}
+  .choice input{accent-color:var(--accent); width:16px; height:16px;}
+  .commitment{display:flex; gap:12px; align-items:flex-start; border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-block-end:10px; background:var(--bg);}
+  .commitment input{margin-top:3px; accent-color:var(--accent); width:16px; height:16px; flex-shrink:0;}
+  .commitment .txt{font-size:14px; line-height:1.45;}
+  .commitment .tag{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.03em; padding:2px 7px; border-radius:6px; margin-left:6px; vertical-align:middle;}
+  .tag.must{background:var(--accent-soft); color:var(--accent);}
+  .tag.nice{background:var(--surface-alt); color:var(--text-muted);}
+  .addr-block{border:1px solid var(--border); border-radius:12px; padding:16px; margin-block-end:12px; background:var(--bg); position:relative;}
+  .addr-block .addr-title{font-size:13px; font-weight:700; margin-bottom:12px; color:var(--accent);}
+  .remove-addr{position:absolute; top:12px; right:12px; background:none; border:none; color:var(--text-muted); font-size:12px; cursor:pointer; text-decoration:underline;}
+  .add-addr{background:var(--surface-alt); border:1px dashed var(--border); color:var(--accent); border-radius:10px; padding:10px; width:100%; font-size:13px; font-weight:600; cursor:pointer; margin-block-start:4px;}
+  .add-addr:disabled{opacity:.4; cursor:not-allowed;}
+  section.conditional{border:1px dashed var(--border); border-radius:16px; opacity:.55; pointer-events:none;}
+  section.conditional.show{opacity:1; pointer-events:auto; border:none;}
+  section.conditional .channel-flag{display:inline-block; font-size:12px; font-weight:600; color:var(--text-muted); background:var(--surface-alt); border-radius:8px; padding:6px 10px; margin-bottom:14px;}
+  section.conditional.show .channel-flag{display:none;}
+  .download-list{display:flex; flex-direction:column; gap:8px;}
+  .download-list .item{display:flex; justify-content:space-between; align-items:center; gap:10px; border:1px solid var(--border); border-radius:10px; padding:10px 14px; background:var(--bg); font-size:13px;}
+  .pill-btn{border:1px solid var(--border); background:var(--surface); color:var(--text-muted); font-size:12px; padding:5px 10px; border-radius:20px; cursor:default;}
+  .actions{display:flex; gap:12px; align-items:center; margin-block-start:8px; flex-wrap:wrap;}
+  button.primary{background:var(--accent); color:#fff; border:none; border-radius:10px; padding:13px 22px; font-size:15px; font-weight:700; cursor:pointer; font-family:inherit;}
+  button.primary:hover{background:var(--accent-hover);}
+  button.primary:disabled{opacity:.6; cursor:not-allowed;}
+  button.ghost{background:none; border:1px solid var(--border); color:var(--text); border-radius:10px; padding:12px 18px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit;}
+  .error-msg{color:var(--danger); font-size:13px; margin-block-start:6px; display:none;}
+  .field.invalid input, .field.invalid textarea{border-color:var(--danger);}
+  .field.invalid .error-msg{display:block;}
+  #confirmScreen{display:none;}
+  #confirmScreen.show{display:block;}
+  #formScreen.hide{display:none;}
+  .confirm-icon{width:48px; height:48px; border-radius:50%; background:var(--success-soft); color:var(--success); display:flex; align-items:center; justify-content:center; font-size:24px; margin-block-end:14px;}
+  .summary-block{margin-block-end:14px;}
+  .summary-block h3{font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-muted); margin:0 0 8px;}
+  .summary-row{display:flex; justify-content:space-between; gap:16px; font-size:14px; padding:6px 0; border-bottom:1px solid var(--border);}
+  .summary-row:last-child{border-bottom:none;}
+  .summary-row .k{color:var(--text-muted); flex-shrink:0;}
+  .summary-row .v{text-align:right; font-weight:500;}
+  footer.note{color:var(--text-muted); font-size:12px; text-align:center; margin-block-start:24px; line-height:1.6;}
+  .intro-card{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-block-end:16px;}
+  .intro-card h2{font-family:"Sora",sans-serif; font-size:16px; margin:0 0 8px;}
+  .intro-card p{font-size:14px; line-height:1.6; color:var(--text); margin:0 0 8px;}
+  .intro-card p:last-child{margin-bottom:0;}
+  .submit-error{
+    display:none; background:var(--danger-soft); border:1px solid var(--danger); color:var(--text);
+    border-radius:12px; padding:14px 16px; font-size:13.5px; margin-block-end:16px; line-height:1.5;
+  }
+  .submit-error.show{display:block;}
+  .spinner{display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; margin-right:8px; vertical-align:-2px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">Addi · Key Accounts</span>
+    <h1>Registro y compromisos — Beneficio 3x0</h1>
+    <p class="sub">Diligencia este formulario para activar el 3x0 en primera compra. Los campos marcados varían según los canales que selecciones.</p>
+  </header>
+
+  <div class="intro-card">
+    <h2>¿Qué es el 3x0 en primera compra?</h2>
+    <p>Con el 3x0, el cliente nuevo de Addi paga su primera compra con tu marca a <strong>3 cuotas sin interés</strong>. Es un beneficio pensado para atraer y convertir clientes nuevos.</p>
+    <p>Este formulario registra tu marca, los canales donde activarás el beneficio y los compromisos de visibilidad que asumes para mantenerlo activo. Al finalizar, tu KAM de Addi se pondrá en contacto para completar la activación.</p>
+  </div>
+
+  <div class="submit-error" id="submitError"></div>
+
+  <form id="formScreen" novalidate>
+    <div class="card">
+      <h2><span class="step-num">1</span>Datos del aliado</h2>
+      <div class="field">
+        <label for="allyName">Nombre del aliado</label>
+        <input type="text" id="allyName" required>
+        <div class="error-msg">Este campo es obligatorio.</div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label for="ownerName">Nombre de quien solicita</label>
+          <input type="text" id="ownerName" required>
+          <div class="error-msg">Este campo es obligatorio.</div>
+        </div>
+        <div class="field">
+          <label for="ownerEmail">Correo electrónico</label>
+          <input type="email" id="ownerEmail" required>
+          <div class="error-msg">Ingresa un correo válido.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Canales donde desea activar el beneficio</label>
+        <div class="choice-row">
+          <label class="choice"><input type="checkbox" id="chFisica" value="Tienda física"> Tienda física</label>
+          <label class="choice"><input type="checkbox" id="chEcommerce" value="E-commerce"> E-commerce</label>
+        </div>
+        <div class="error-msg" id="channelError">Selecciona al menos un canal.</div>
+      </div>
+      <div class="field">
+        <label for="multibrand">¿Es una marca multimarca? Indica en qué marcas debe habilitarse <span class="opt">(si no aplica, escribe 0)</span></label>
+        <input type="text" id="multibrand" required>
+        <div class="error-msg">Este campo es obligatorio. Escribe 0 si no aplica.</div>
+      </div>
+      <div class="field">
+        <label for="storeCount">Cantidad de tiendas totales de la marca</label>
+        <input type="number" id="storeCount" min="0" required>
+        <div class="error-msg">Ingresa un número válido.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="step-num">2</span>Entrega del material POP</h2>
+      <p class="hint">Addi despacha el material hacia máximo 3 centros de distribución; el aliado distribuye desde allí a sus tiendas. Agrega hasta 3 direcciones.</p>
+      <div id="addrList"></div>
+      <button type="button" class="add-addr" id="addAddrBtn">+ Agregar otra dirección</button>
+    </div>
+
+    <section class="conditional" id="secFisica">
+      <div class="card">
+        <h2><span class="step-num">3a</span>Compromisos — Tienda física</h2>
+        <div class="channel-flag">Marca "Tienda física" en la Sección 1 para habilitar esta sección</div>
+        <div class="field">
+          <label for="popCount">Cantidad de habladores solicitados</label>
+          <p class="hint" style="margin:0 0 8px;">El material POP disponible en esta fase es únicamente habladores. Indica cuántos necesitas para tus puntos de venta.</p>
+          <input type="number" id="popCount" min="1" required>
+          <div class="error-msg">Ingresa la cantidad de habladores que necesitas.</div>
+        </div>
+        <div class="commitment">
+          <input type="checkbox" id="cFisicaPop" required>
+          <div class="txt">Instalar y mantener visible el material POP en los puntos de venta<span class="tag must">Obligatorio</span></div>
+        </div>
+        <div class="commitment">
+          <input type="checkbox" id="cFisicaTrain" required>
+          <div class="txt">Garantizar que la fuerza comercial asista a las sesiones de capacitación disponibles<span class="tag must">Obligatorio</span></div>
+        </div>
+        <div class="commitment">
+          <input type="checkbox" id="cFisicaCrm">
+          <div class="txt">Habilitar visibilidad del beneficio en canales de CRM<span class="tag nice">Deseable</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="conditional" id="secEcommerce">
+      <div class="card">
+        <h2><span class="step-num">3b</span>Compromisos — E-commerce</h2>
+        <div class="channel-flag">Marca "E-commerce" en la Sección 1 para habilitar esta sección</div>
+        <div class="field">
+          <label>Formato(s) de visibilidad que se compromete a implementar</label>
+          <div class="choice-row">
+            <label class="choice"><input type="checkbox" name="ecomFormat" value="Banners"> Banners</label>
+            <label class="choice"><input type="checkbox" name="ecomFormat" value="Push notifications"> Push notifications</label>
+            <label class="choice"><input type="checkbox" name="ecomFormat" value="Top header"> Top header</label>
+            <label class="choice"><input type="checkbox" name="ecomFormat" id="ecomOtroChk" value="Otro"> Otro</label>
+          </div>
+          <input type="text" id="ecomOtroTxt" placeholder="Especifica el otro formato" style="margin-top:10px; display:none;">
+          <div class="error-msg" id="ecomFormatError">Selecciona al menos un formato.</div>
+        </div>
+        <div class="field">
+          <label for="ecomCadence">Cadencia mensual comprometida (días al mes)</label>
+          <input type="number" id="ecomCadence" min="3">
+          <p class="hint" style="margin:6px 0 0;">Mínimo 3 días al mes. No es necesario que sea permanente (always-on).</p>
+          <div class="error-msg">Ingresa mínimo 3 días.</div>
+        </div>
+        <div class="commitment">
+          <input type="checkbox" id="cEcomCheckout" required>
+          <div class="txt">Incluir mensaje en el checkout confirmando el beneficio de 0% de interés para clientes nuevos, si la plataforma lo permite<span class="tag must">Obligatorio</span></div>
+        </div>
+        <div class="commitment">
+          <input type="checkbox" id="cEcomCrm">
+          <div class="txt">Habilitar visibilidad del beneficio en canales de CRM<span class="tag nice">Deseable</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="card">
+      <h2><span class="step-num">4</span>Material de apoyo</h2>
+      <p class="hint">Descarga los recursos para preparar tu activación.</p>
+      <div class="download-list">
+        <div class="item">Toolkit con piezas para comunicaciones <span class="pill-btn">Enviado por tu KAM</span></div>
+        <div class="item">Ayudaventas para la fuerza comercial <span class="pill-btn">Enviado por tu KAM</span></div>
+        <div class="item">Especificaciones y tamaños del material POP <span class="pill-btn">Enviado por tu KAM</span></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="primary" id="submitBtn">Enviar registro</button>
+    </div>
+  </form>
+
+  <div id="confirmScreen">
+    <div class="card">
+      <div class="confirm-icon">✓</div>
+      <h2 style="margin-bottom:6px;">¡Registro recibido!</h2>
+      <p class="hint">Tu KAM de Addi revisará tu información y se pondrá en contacto para completar la activación.</p>
+      <div id="summaryOut"></div>
+    </div>
+  </div>
+
+  <footer class="note">Addi · Beneficio 3x0 en primera compra</footer>
+</div>
+
+<script>
+(function(){
+  var MAX_ADDR = 3;
+  var addrList = document.getElementById('addrList');
+  var addrCount = 0;
+
+  function addAddress(){
+    addrCount++;
+    var idx = addrCount;
+    var block = document.createElement('div');
+    block.className = 'addr-block';
+    block.dataset.idx = idx;
+    block.innerHTML =
+      '<div class="addr-title">Dirección ' + idx + (idx===1 ? ' (obligatoria)' : ' (opcional)') + '</div>' +
+      (idx>1 ? '<button type="button" class="remove-addr">Eliminar</button>' : '') +
+      '<div class="grid2">' +
+        '<div class="field"><label>Ciudad</label><input type="text" class="addr-city" ' + (idx===1?'required':'') + '></div>' +
+        '<div class="field"><label>Dirección</label><input type="text" class="addr-dir" ' + (idx===1?'required':'') + '></div>' +
+      '</div>' +
+      '<div class="grid2">' +
+        '<div class="field"><label>Persona que recibe</label><input type="text" class="addr-recv" ' + (idx===1?'required':'') + '></div>' +
+        '<div class="field"><label>Número de identificación</label><input type="text" class="addr-id" ' + (idx===1?'required':'') + '></div>' +
+      '</div>' +
+      '<div class="field"><label>Celular</label><input type="tel" class="addr-phone" ' + (idx===1?'required':'') + '></div>';
+    addrList.appendChild(block);
+    var rm = block.querySelector('.remove-addr');
+    if (rm) rm.addEventListener('click', function(){ block.remove(); addrCount--; refreshAddBtn(); });
+    refreshAddBtn();
+  }
+  function refreshAddBtn(){
+    document.getElementById('addAddrBtn').disabled = addrList.children.length >= MAX_ADDR;
+  }
+  document.getElementById('addAddrBtn').addEventListener('click', addAddress);
+  addAddress();
+
+  var chFisica = document.getElementById('chFisica');
+  var chEcommerce = document.getElementById('chEcommerce');
+  var secFisica = document.getElementById('secFisica');
+  var secEcommerce = document.getElementById('secEcommerce');
+
+  function syncSections(){
+    secFisica.classList.toggle('show', chFisica.checked);
+    secEcommerce.classList.toggle('show', chEcommerce.checked);
+    toggleRequired(secFisica, chFisica.checked);
+    toggleRequired(secEcommerce, chEcommerce.checked);
+  }
+  function toggleRequired(section, on){
+    section.querySelectorAll('#cFisicaPop, #cFisicaTrain, #cEcomCheckout').forEach(function(el){
+      if(on) el.setAttribute('required',''); else el.removeAttribute('required');
+    });
+  }
+  chFisica.addEventListener('change', syncSections);
+  chEcommerce.addEventListener('change', syncSections);
+  syncSections();
+
+  document.getElementById('ecomOtroChk').addEventListener('change', function(e){
+    document.getElementById('ecomOtroTxt').style.display = e.target.checked ? 'block' : 'none';
+  });
+
+  function markInvalid(fieldEl, invalid){
+    fieldEl.classList.toggle('invalid', invalid);
+  }
+  function checkedValues(name){
+    return Array.prototype.slice.call(document.querySelectorAll('input[name="'+name+'"]:checked')).map(function(i){return i.value;});
+  }
+
+  function ecomOtherLabel(vals){
+    if (vals.indexOf('Otro') === -1) return vals;
+    var txt = document.getElementById('ecomOtroTxt').value.trim();
+    return vals.map(function(v){ return v === 'Otro' && txt ? 'Otro: ' + txt : v; });
+  }
+
+  function collectData(){
+    var addresses = Array.prototype.slice.call(addrList.children).map(function(block){
+      return {
+        ciudad: block.querySelector('.addr-city').value.trim(),
+        direccion: block.querySelector('.addr-dir').value.trim(),
+        recibe: block.querySelector('.addr-recv').value.trim(),
+        identificacion: block.querySelector('.addr-id').value.trim(),
+        celular: block.querySelector('.addr-phone').value.trim()
+      };
+    }).filter(function(a){ return a.ciudad || a.direccion || a.recibe; });
+
+    return {
+      formulario: 'Registro y compromisos — Beneficio 3x0 en Primera Compra',
+      fecha: new Date().toISOString(),
+      aliado: document.getElementById('allyName').value.trim(),
+      solicitante: document.getElementById('ownerName').value.trim(),
+      correo: document.getElementById('ownerEmail').value.trim(),
+      canales: [chFisica.checked?'Tienda física':null, chEcommerce.checked?'E-commerce':null].filter(Boolean),
+      multimarca: document.getElementById('multibrand').value.trim(),
+      tiendasTotales: document.getElementById('storeCount').value.trim(),
+      direccionesPOP: addresses,
+      tiendaFisica: !chFisica.checked ? null : {
+        habladoresSolicitados: document.getElementById('popCount').value.trim(),
+        compromisoInstalacionPOP: document.getElementById('cFisicaPop').checked,
+        compromisoCapacitacion: document.getElementById('cFisicaTrain').checked,
+        compromisoCRM: document.getElementById('cFisicaCrm').checked
+      },
+      ecommerce: !chEcommerce.checked ? null : {
+        formatosVisibilidad: ecomOtherLabel(checkedValues('ecomFormat')),
+        cadenciaMensualDias: document.getElementById('ecomCadence').value.trim(),
+        compromisoCheckout: document.getElementById('cEcomCheckout').checked,
+        compromisoCRM: document.getElementById('cEcomCrm').checked
+      }
+    };
+  }
+
+  function renderSummary(data){
+    var html = '';
+    html += summaryBlock('Aliado', [
+      ['Nombre', data.aliado], ['Solicitante', data.solicitante], ['Correo', data.correo],
+      ['Canales', data.canales.join(' + ')], ['Multimarca', data.multimarca], ['Tiendas totales', data.tiendasTotales]
+    ]);
+    data.direccionesPOP.forEach(function(a, i){
+      html += summaryBlock('Dirección de entrega ' + (i+1), [
+        ['Ciudad', a.ciudad], ['Dirección', a.direccion], ['Recibe', a.recibe],
+        ['Identificación', a.identificacion], ['Celular', a.celular]
+      ]);
+    });
+    if (data.tiendaFisica){
+      html += summaryBlock('Compromisos — Tienda física', [
+        ['Habladores solicitados', data.tiendaFisica.habladoresSolicitados],
+        ['Instalación y visibilidad POP', data.tiendaFisica.compromisoInstalacionPOP ? 'Aceptado' : '—'],
+        ['Capacitación fuerza comercial', data.tiendaFisica.compromisoCapacitacion ? 'Aceptado' : '—'],
+        ['Visibilidad CRM', data.tiendaFisica.compromisoCRM ? 'Aceptado' : 'No aplica']
+      ]);
+    }
+    if (data.ecommerce){
+      html += summaryBlock('Compromisos — E-commerce', [
+        ['Formatos de visibilidad', data.ecommerce.formatosVisibilidad.join(', ')],
+        ['Cadencia mensual', data.ecommerce.cadenciaMensualDias + ' días/mes'],
+        ['Mensaje en checkout', data.ecommerce.compromisoCheckout ? 'Aceptado' : '—'],
+        ['Visibilidad CRM', data.ecommerce.compromisoCRM ? 'Aceptado' : 'No aplica']
+      ]);
+    }
+    return html;
+  }
+  function summaryBlock(title, rows){
+    var rowsHtml = rows.map(function(r){
+      return '<div class="summary-row"><span class="k">'+escapeHtml(r[0])+'</span><span class="v">'+escapeHtml(String(r[1]||'—'))+'</span></div>';
+    }).join('');
+    return '<div class="summary-block"><h3>'+escapeHtml(title)+'</h3>'+rowsHtml+'</div>';
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  var form = document.getElementById('formScreen');
+  var submitBtn = document.getElementById('submitBtn');
+  var submitError = document.getElementById('submitError');
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    submitError.classList.remove('show');
+    var valid = true;
+
+    [['allyName',document.getElementById('allyName')],
+     ['ownerName',document.getElementById('ownerName')],
+     ['multibrand',document.getElementById('multibrand')],
+     ['storeCount',document.getElementById('storeCount')]].forEach(function(pair){
+      var el = pair[1]; var f = el.closest('.field');
+      var bad = !el.value.trim(); markInvalid(f, bad); if (bad) valid = false;
+    });
+    var emailEl = document.getElementById('ownerEmail');
+    var emailBad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value);
+    markInvalid(emailEl.closest('.field'), emailBad); if (emailBad) valid = false;
+
+    var anyChannel = chFisica.checked || chEcommerce.checked;
+    document.getElementById('channelError').style.display = anyChannel ? 'none' : 'block';
+    if (!anyChannel) valid = false;
+
+    var addrBlocks = Array.prototype.slice.call(addrList.children);
+    addrBlocks.forEach(function(block, i){
+      if (i === 0){
+        ['addr-city','addr-dir','addr-recv','addr-id','addr-phone'].forEach(function(cls){
+          var el = block.querySelector('.'+cls);
+          var bad = !el.value.trim();
+          markInvalid(el.closest('.field'), bad); if (bad) valid = false;
+        });
+      }
+    });
+
+    if (chFisica.checked){
+      var popCountEl = document.getElementById('popCount');
+      var popBad = !popCountEl.value || Number(popCountEl.value) < 1;
+      markInvalid(popCountEl.closest('.field'), popBad); if (popBad) valid = false;
+      ['cFisicaPop','cFisicaTrain'].forEach(function(id){
+        if (!document.getElementById(id).checked) valid = false;
+      });
+    }
+    if (chEcommerce.checked){
+      var ecomVals = checkedValues('ecomFormat');
+      var ecomBad = ecomVals.length === 0;
+      document.getElementById('ecomFormatError').style.display = ecomBad ? 'block' : 'none';
+      if (ecomBad) valid = false;
+      var cadEl = document.getElementById('ecomCadence');
+      var cadBad = !cadEl.value || Number(cadEl.value) < 3;
+      markInvalid(cadEl.closest('.field'), cadBad); if (cadBad) valid = false;
+      if (!document.getElementById('cEcomCheckout').checked) valid = false;
+    }
+
+    if (!valid){
+      var firstInvalid = form.querySelector('.invalid, .error-msg[style*="block"]');
+      if (firstInvalid) firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+
+    var data = collectData();
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span>Enviando…';
+
+    try{
+      var resp = await fetch('/api/submit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+      if (!resp.ok){
+        var body = await resp.json().catch(function(){ return {}; });
+        throw new Error(body.error || 'No se pudo enviar el formulario');
+      }
+      document.getElementById('summaryOut').innerHTML = renderSummary(data);
+      form.classList.add('hide');
+      document.getElementById('confirmScreen').classList.add('show');
+      window.scrollTo({top:0, behavior:'smooth'});
+    } catch(err){
+      submitError.textContent = 'No pudimos enviar tu registro. Verifica tu conexión e intenta de nuevo. Si el problema persiste, contacta a tu KAM.';
+      submitError.classList.add('show');
+      submitError.scrollIntoView({behavior:'smooth', block:'center'});
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Enviar registro';
+    }
+  });
+})();
+</script>
+</body>
+</html>
