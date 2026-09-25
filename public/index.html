@@ -161,12 +161,15 @@
       </div>
     </div>
 
-    <div class="card">
-      <h2><span class="step-num">2</span>Entrega del material POP</h2>
-      <p class="hint">Addi despacha el material hacia máximo 3 centros de distribución; el aliado distribuye desde allí a sus tiendas. Agrega hasta 3 direcciones.</p>
-      <div id="addrList"></div>
-      <button type="button" class="add-addr" id="addAddrBtn">+ Agregar otra dirección</button>
-    </div>
+    <section class="conditional" id="secPOP">
+      <div class="card">
+        <h2><span class="step-num">2</span>Entrega del material POP</h2>
+        <div class="channel-flag">Marca "Tienda física" en la Sección 1 para habilitar esta sección</div>
+        <p class="hint">Addi despacha el material hacia máximo 3 centros de distribución; el aliado distribuye desde allí a sus tiendas. Agrega hasta 3 direcciones.</p>
+        <div id="addrList"></div>
+        <button type="button" class="add-addr" id="addAddrBtn">+ Agregar otra dirección</button>
+      </div>
+    </section>
 
     <section class="conditional" id="secFisica">
       <div class="card">
@@ -289,18 +292,30 @@
 
   var chFisica = document.getElementById('chFisica');
   var chEcommerce = document.getElementById('chEcommerce');
+  var secPOP = document.getElementById('secPOP');
   var secFisica = document.getElementById('secFisica');
   var secEcommerce = document.getElementById('secEcommerce');
 
   function syncSections(){
+    secPOP.classList.toggle('show', chFisica.checked);
     secFisica.classList.toggle('show', chFisica.checked);
     secEcommerce.classList.toggle('show', chEcommerce.checked);
     toggleRequired(secFisica, chFisica.checked);
     toggleRequired(secEcommerce, chEcommerce.checked);
+    toggleAddrRequired(chFisica.checked);
   }
   function toggleRequired(section, on){
     section.querySelectorAll('#cFisicaPop, #cFisicaTrain, #cEcomCheckout').forEach(function(el){
       if(on) el.setAttribute('required',''); else el.removeAttribute('required');
+    });
+  }
+  function toggleAddrRequired(on){
+    var firstBlock = addrList.children[0];
+    if (!firstBlock) return;
+    ['addr-city','addr-dir','addr-recv','addr-id','addr-phone'].forEach(function(cls){
+      var el = firstBlock.querySelector('.'+cls);
+      if (!el) return;
+      if (on) el.setAttribute('required',''); else el.removeAttribute('required');
     });
   }
   chFisica.addEventListener('change', syncSections);
@@ -426,16 +441,18 @@
     document.getElementById('channelError').style.display = anyChannel ? 'none' : 'block';
     if (!anyChannel) valid = false;
 
-    var addrBlocks = Array.prototype.slice.call(addrList.children);
-    addrBlocks.forEach(function(block, i){
-      if (i === 0){
-        ['addr-city','addr-dir','addr-recv','addr-id','addr-phone'].forEach(function(cls){
-          var el = block.querySelector('.'+cls);
-          var bad = !el.value.trim();
-          markInvalid(el.closest('.field'), bad); if (bad) valid = false;
-        });
-      }
-    });
+    if (chFisica.checked){
+      var addrBlocks = Array.prototype.slice.call(addrList.children);
+      addrBlocks.forEach(function(block, i){
+        if (i === 0){
+          ['addr-city','addr-dir','addr-recv','addr-id','addr-phone'].forEach(function(cls){
+            var el = block.querySelector('.'+cls);
+            var bad = !el.value.trim();
+            markInvalid(el.closest('.field'), bad); if (bad) valid = false;
+          });
+        }
+      });
+    }
 
     if (chFisica.checked){
       var popCountEl = document.getElementById('popCount');
