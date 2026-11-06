@@ -218,8 +218,8 @@
           <div class="error-msg">Ingresa mínimo 3 días.</div>
         </div>
         <div class="commitment">
-          <input type="checkbox" id="cEcomCheckout" required>
-          <div class="txt">Incluir mensaje en el checkout confirmando el beneficio de 0% de interés para clientes nuevos, si la plataforma lo permite<span class="tag must">Obligatorio</span></div>
+          <input type="checkbox" id="cEcomCheckout">
+          <div class="txt">Incluir mensaje en el checkout confirmando el beneficio de 0% de interés para clientes nuevos, si la plataforma lo permite<span class="tag nice">Deseable</span></div>
         </div>
         <div class="commitment">
           <input type="checkbox" id="cEcomCrm">
@@ -305,7 +305,7 @@
     toggleAddrRequired(chFisica.checked);
   }
   function toggleRequired(section, on){
-    section.querySelectorAll('#cFisicaPop, #cFisicaTrain, #cEcomCheckout').forEach(function(el){
+    section.querySelectorAll('#cFisicaPop, #cFisicaTrain').forEach(function(el){
       if(on) el.setAttribute('required',''); else el.removeAttribute('required');
     });
   }
@@ -399,7 +399,7 @@
       html += summaryBlock('Compromisos — E-commerce', [
         ['Formatos de visibilidad', data.ecommerce.formatosVisibilidad.join(', ')],
         ['Cadencia mensual', data.ecommerce.cadenciaMensualDias + ' días/mes'],
-        ['Mensaje en checkout', data.ecommerce.compromisoCheckout ? 'Aceptado' : '—'],
+         ['Mensaje en checkout', data.ecommerce.compromisoCheckout ? 'Aceptado' : 'No aplica'],
         ['Visibilidad CRM', data.ecommerce.compromisoCRM ? 'Aceptado' : 'No aplica']
       ]);
     }
@@ -470,7 +470,7 @@
       var cadEl = document.getElementById('ecomCadence');
       var cadBad = !cadEl.value || Number(cadEl.value) < 3;
       markInvalid(cadEl.closest('.field'), cadBad); if (cadBad) valid = false;
-      if (!document.getElementById('cEcomCheckout').checked) valid = false;
+       
     }
 
     if (!valid){
